@@ -21,6 +21,7 @@ function home() {
 //Le HTML est envoyé à ma div avec l'id app et le sera tout au long des étapes de mon quizz
 
 function quiz() {
+  const progress = (currentQuestion / questions.length) * 100;
   const app = document.getElementById("app");
   const q = questions[currentQuestion];
   let choicesHtml = "";
@@ -34,11 +35,17 @@ function quiz() {
   // Ici j'instancie les questions et ses choix en associant un compteur aux questions et des idx (id qui s'auto incremente) aux choix
 
   app.innerHTML = `
+      <div style="background:#ddd; border-radius:5px; margin-bottom:10px; height:20px;">
+        <div style="width:${progress}%; background:blue; height:100%; border-radius:5px;"></div>
+      </div>
         <h3>Question n°${currentQuestion + 1} / ${questions.length}</h3>
         <div>${q.text}</div>
         <form id="quizForm">
             <div class="radio-group">${choicesHtml}</div>
             <div style="display: flex; gap: 10px;">
+                <button type="button" id="prevBtn" ${
+                  currentQuestion === 0 ? 'style="display:none"' : ""
+                }>Précédent</button>
                 <button type="button" id="nextBtn" ${
                   currentQuestion === questions.length - 1
                     ? 'style="display:none"'
@@ -53,7 +60,16 @@ function quiz() {
         </form>
     `;
   // Ici je fais essentiellement l'affichage des bonnes données, questions, choix, bouton suivant ou valider selon l'avancement
-
+  const prevBtn = document.getElementById("prevBtn");
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      if (currentQuestion > 0) {
+        console.log("quiz");
+        currentQuestion--;
+        quiz();
+      }
+    });
+  }
   const nextBtn = document.getElementById("nextBtn");
   if (nextBtn) {
     nextBtn.addEventListener("click", () => {
